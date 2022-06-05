@@ -1126,6 +1126,19 @@ namespace KhTracker
                     child.Visibility = Visibility.Hidden;
                 }
             }
+            //reser world cross visibility
+            foreach (string key in data.WorldsData.Keys.ToList())
+            {
+                string crossname = key + "Cross";
+                if (data.WorldsData[key].top.FindName(crossname) is Image Cross)
+                {
+                    Cross.Visibility = Visibility.Collapsed;
+                }
+                if (broadcast.FindName(crossname) is Image CrossB)
+                {
+                    CrossB.Visibility = Visibility.Collapsed;
+                }
+            }
 
             UpdatePointScore(0);
             ReportsToggle(true);

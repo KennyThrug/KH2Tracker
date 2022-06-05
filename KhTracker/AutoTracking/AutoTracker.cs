@@ -184,6 +184,7 @@ namespace KhTracker
                     Console.WriteLine("PCSX2 Found, starting Auto-Tracker");
                     //SetHintText("PCSX2 Detected - Tracking", 30000, ""); //change with icons later
                     Connect.Source = data.AD_PS2;
+                    pcsx2tracking = true;
 
                 }
                 else
@@ -191,6 +192,7 @@ namespace KhTracker
                     Console.WriteLine("PC Found, starting Auto-Tracker");
                     //SetDetectionText("PC Detected - Connecting..."); //change with icons later
                     Connect.Source = data.AD_PC;
+                    pcsx2tracking = false;
                 }
 
                 if (storedDetectedVersion != alternateCheckInt && storedDetectedVersion != 0)
