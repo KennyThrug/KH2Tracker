@@ -12,7 +12,7 @@
         LocationChanged="Window_LocationChanged"
         SizeChanged="Window_SizeChanged"
         AllowDrop="True" Drop="DropFile"
-        Title="KH2 Tracker 2.0 (Beta v6.5)" Height="880" Width="570" Background="#303030"
+        Title="KH2 Tracker 2.0 (Beta v6.5)" Height="880" Width="870" Background="#303030"
         MinHeight="440" MinWidth="300">
 
     <Window.Resources>
@@ -40,6 +40,7 @@
                     <MenuItem Header="Load Shan Hints (*.pnach)" 		Click="ParseSeed"/>
                     <MenuItem Header="Load KH2Randomizer Seed (*.zip)" 	Click="OpenKHSeed"/>
                 </MenuItem>
+                <MenuItem Header="Start Bingo" Click="StartBingo" x:Name="Start_Bingo"/>
                 <Separator/>
                 <MenuItem Header="Start PCSX2 Tracking" 	    Click="InitPCSX2Tracker" x:Name="TrackPCSX2Toggle"/>
                 <MenuItem Header="Start PC Port Tracking" 	    Click="InitPCTracker"    x:Name="TrackPCToggle"/>

@@ -113,6 +113,9 @@
       <DependentUpon>Item.xaml</DependentUpon>
     </Compile>
     <Compile Include="Core\Toggles.cs" />
+    <Compile Include="BingoBoard.xaml.cs">
+      <DependentUpon>BingoBoard.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WorldGrid.xaml.cs">
       <DependentUpon>WorldGrid.xaml</DependentUpon>
     </Compile>
@@ -125,6 +128,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ProgressionDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="BingoBoard.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

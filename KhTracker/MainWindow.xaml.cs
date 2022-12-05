@@ -821,5 +821,11 @@ namespace KhTracker
             return points;
         }
 
+        private void StartBingo(object sender, RoutedEventArgs e)
+        {
+            BingoBoard bingoBoard = new BingoBoard();
+            bingoBoard.Show();
+            //BingoBoard
+        }
     }
 }
