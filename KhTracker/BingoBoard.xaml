@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KhTracker"
         mc:Ignorable="d"
-        Title="BingoBoard" Height="500" Width="500">
-    <Grid>
+        Title="BingoBoard" Height="600" Width="600">
+    <Grid Name="BingoGrid">
         <Grid.RowDefinitions>
             <RowDefinition x:Name="Row1" Height="1*"/>
             <RowDefinition x:Name="Row2" Height="1*"/>
@@ -22,15 +22,6 @@
             <ColumnDefinition x:Name="Column5" Width="1*"/>
         </Grid.ColumnDefinitions>
         <!--Row 1-->
-        <Button Grid.Column="0" Grid.Row="0" x:Name="TopRights" Click="TopRightButton">
-            <Label Name="TopRightLabel" Content="Hello There">
-                
-            </Label>
-            
-        </Button>
-        <Button Grid.Column="1" Grid.Row="0">
-            
-        </Button>
         <!--Row 2-->
         <!--Row 3-->
         <!--Row 4-->

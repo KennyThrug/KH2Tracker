@@ -823,8 +823,18 @@ namespace KhTracker
 
         private void StartBingo(object sender, RoutedEventArgs e)
         {
-            BingoBoard bingoBoard = new BingoBoard();
-            bingoBoard.Show();
+            Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog
+            {
+                DefaultExt = ".zip",
+                Filter = "OpenKH Seeds (*.zip)|*.zip",
+                Title = "Select Seed File"
+            };
+            if (openFileDialog.ShowDialog() == true)
+            {
+                OpenKHSeed(openFileDialog.FileName); //Load Seed file as normal
+                BingoBoard bingoBoard = new BingoBoard(openFileDialog.FileName); //Send seed file to bingoboard
+                bingoBoard.Show();
+            }
             //BingoBoard
         }
     }
