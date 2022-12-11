@@ -17,6 +17,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Xml.Linq;
 using HtmlAgilityPack;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace KhTracker
 {
@@ -30,7 +31,7 @@ namespace KhTracker
         //Normal : 6 Hard Cells, 15 Normal, 4 Easy
         //Hard : 15 Hard Cells, 10 Normal, 0 Easy
         //BingoOption is the things that are going on the board
-        struct BingoOption{
+        struct BingoOption {
             public string tag;
             public string text;
             public bool isHintable; //Tells whether or not the Option is Hintable
@@ -38,7 +39,7 @@ namespace KhTracker
             public System.Windows.Controls.Button button;
         }
         BingoOption[] options;
-        string seedName;
+        Random rand = new Random(); //Seeded Random number bullshit
 
         //lists of all items and bosses in the seed
         struct Items
@@ -94,7 +95,6 @@ namespace KhTracker
             new List<string> { //TWTNW
             "Armor Xemnas I", "Armor Xemnas II", "Final Xemnas","Final Xemnas (Data)","Luxord","Roxas","Saix","Xemnas","Xemnas (Data)","Xigbar"}
         };
-
         public BingoBoard(string fileName)
         {
             InitializeComponent();
@@ -102,7 +102,7 @@ namespace KhTracker
             generateBingoButtons();
         }
 
-
+        //given the fileName, will open the zip, grab the spoilerlog, and use it
         private void goThroughHints(string fileName)
         {
             ZipArchiveEntry spoiler = null;
@@ -138,13 +138,13 @@ namespace KhTracker
             MainWindow.data.reportInformation.Clear();
             MainWindow.data.reportInformation = tempReportInformation;
         }
-        
+        //Helper Function that turns a string into an world enum
         world convertStringToWorld(string world)
         {
             //TODO this function
             return 0;
         }
-
+        //Makes Reports report more hints for the bingoboard
         void addHintsOnWorld(string world, int numHints)
         {
             addHintsOnWorld(convertStringToWorld(world), numHints);
@@ -157,11 +157,11 @@ namespace KhTracker
         string getValueFromLine(string line, int numFirstQuote)
         {
             string res = "";
-            for(int i = 0; i < line.Length; i++)
+            for (int i = 0; i < line.Length; i++)
             {
                 if (line[i] == '\"')
                 {
-                    if(numFirstQuote <= 0)
+                    if (numFirstQuote <= 0)
                     {
                         return res;
                     }
@@ -170,14 +170,253 @@ namespace KhTracker
                         numFirstQuote--;
                     }
                 }
-                else if(numFirstQuote == 0)
+                else if (numFirstQuote == 0)
                 {
                     res += line[i];
                 }
             }
             return "";
         }
-        
+
+        BingoOption easyMakeBingo(string text, string tag, bool isHintable)
+        {
+            BingoOption option = new BingoOption();
+            option.text = text;
+            option.tag = tag;
+            option.isHintable = isHintable;
+            option.isClicked = false;
+            return option;
+        }
+
+        bool checkForTag(string tag,int numCell)
+        {
+            for(int i = 0; i < numCell; i++)
+            {
+                if (options[i].tag == tag || tag == "Failed")
+                {
+                    return true; //Means that the tag exists, reroll cell
+                }
+            }
+            return false; //Means that tag doesn't exist, move on
+        }
+        BingoOption makeEasyCell(int numCell)
+        {
+            BingoOption option = easyMakeBingo("Placeholder",numCell.ToString(),false);
+            switch (rand.Next(0,9))
+            {
+                case (0):
+                    //Get A level 1 spell
+                    break;
+                case (1):
+                    //Get a level 1 movement ability
+                    break;
+                case (2):
+                    option = easyMakeBingo("Get to level 25", "Level", false);
+                    break;
+                case (3):
+                    option = easyMakeBingo("Save Piglet from the Blustery Winds", "HundredAcre", false);
+                    break;
+                case (4):
+                    option = easyMakeBingo("Get " + rand.Next(3, 5) + " Secret Ansem Reports", "Ansem Reports", false);
+                    break;
+                case (5):
+                    option = easyMakeBingo("Get " + rand.Next(5, 9) + " Keychains", "Keychains", false);
+                    break;
+                case (6):
+                    //Fight a non superboss once
+                    break;
+                case (7):
+                    //Get all Puzzle Pieces from a world
+                    break;
+                case (8):
+                    return makeNormalCell(numCell);
+                case (9):
+                    return makeStupidCell(numCell);
+            }
+            try
+            {
+                if (checkForTag(option.tag, numCell))
+                    return makeEasyCell(numCell);
+            }
+            catch(Exception e)
+            {
+                return makeEasyCell(numCell);
+            }
+            return option;
+        }
+        BingoOption makeNormalCell(int numCell)
+        {
+            BingoOption option = easyMakeBingo("Placeholder", numCell.ToString(), false);
+            switch (rand.Next(0, 14))
+            {
+                case (0):
+                    //Get an Item, ability, or keyblade
+                    break;
+                case (1):
+                    //Get a level 2 spell
+                    break;
+                case (2):
+                    //Defeat a boss in a superboss location
+                    break;
+                case (3):
+                    //Get a level 3 movement ability
+                    break;
+                case (4):
+                    //Beat a specific world
+                    break;
+                case (5):
+                    easyMakeBingo("Get to level 50", "Level", false);
+                    break;
+                case (6):
+                    //Get a drive form
+                    break;
+                case (7):
+                    //Get a Summon
+                    break;
+                case (8):
+                    easyMakeBingo("Get " + rand.Next(6, 9) + " Secret Ansem Reports", "Ansem Reports", false);
+                    break;
+                case (9):
+                    easyMakeBingo("Get " + rand.Next(10, 19) + " Keychains", "Keychains", false);
+                    break;
+                case (10):
+                    //Fight a non-superboss 1-3 times
+                    break;
+                case (11):
+                    //Fight a superboss once
+                    break;
+                case (12):
+                    //Finish a small puzzle
+                    break;
+                case (13):
+                    return makeEasyCell(numCell);
+                case (14):
+                    return makeHardCell(numCell);
+            }
+
+            if (checkForTag(option.tag, numCell))
+                return makeNormalCell(numCell);
+            return option;
+        }
+        BingoOption makeHardCell(int numCell)
+        {
+            BingoOption option = easyMakeBingo("Placeholder", numCell.ToString(), false);
+            switch (rand.Next(0, 10))
+            {
+                case (0):
+                    //Get a level 3 spell
+                    break;
+                case (1):
+                    //Get a Max Level movement ability
+                    break;
+                case (2):
+                    easyMakeBingo("Finish Hundred Acre Woods", "HundredAcre", false);
+                    break;
+                case (3):
+                    easyMakeBingo("Beat Atlantica", "Atlantica", false);
+                    break;
+                case (4):
+                    easyMakeBingo("Get to level 99", "Levels", false);
+                    break;
+                case (5):
+                    easyMakeBingo("Get all Drive forms", "Drive", false);
+                    break;
+                case (6):
+                    easyMakeBingo("Get all Summons", "Summons", false);
+                    break;
+                case (7):
+                    easyMakeBingo("Get " + rand.Next(10, 13) + " Secret Ansem Reports", "Ansem Reports", false);
+                    break;
+                case (8):
+                    easyMakeBingo("Get " + rand.Next(20, 29) + "Keychains", "Keychains", false);
+                    break;
+                case (9):
+                    //Fight a superboss 1-3 times
+                    break;
+                case (10):
+                    //Fight a non-superboss 1-10 times
+                    break;
+                case (11):
+                    //Finish a large puzzle
+                    break;
+                case (12):
+                    return makeNormalCell(numCell);
+            }
+
+            if (checkForTag(option.tag, numCell))
+                return makeHardCell(numCell);
+            return option;
+        }
+        BingoOption makeStupidCell(int numCell)
+        {
+            BingoOption option = easyMakeBingo("Placeholder", numCell.ToString(), false);
+            switch (rand.Next(0, 11))
+            {
+                case (1):
+                    option = easyMakeBingo("Destroy all Tents in Shang's Camp", "Camp", false);
+                    break;
+                case (2):
+                    option = easyMakeBingo("Destroy all stalls in Agrabah's Bazzar", "Bazzar", false);
+                    break;
+                case (3):
+                    option = easyMakeBingo("Dodge roll Sephiroth's reaction Command", "SepRC", false);
+                    break;
+                case (4):
+                    option = easyMakeBingo("Fail Demyx's Minigame", "DemyxMini", false);
+                    break;
+                case (5):
+                    option = easyMakeBingo("Watch Sora get Punched in the Face", "SoraPunch", false);
+                    break;
+                case (6):
+                    option = easyMakeBingo("Get Saved By Mickey", "SavedMickey", false);
+                    break;
+                case (7):
+                    option = easyMakeBingo("Get to the Top of Sunset Hill as Sora", "SunsetHill", false);
+                    break;
+                case (8):
+                    option = easyMakeBingo("Get A high Score in a skateboard Minigame", "Skateboard", false);
+                    break;
+                case (9):
+                    option = easyMakeBingo("Crash the Game", "Crash", false);
+                    break;
+                case (10):
+                    option = easyMakeBingo("Perform Leon's Reaction command", "LeonRC", false);
+                    break;
+                case (11):
+                    return makeEasyCell(numCell);
+                case (12):
+                    return makeHardCell(numCell);
+            }
+
+            if (checkForTag(option.tag, numCell))
+                return makeStupidCell(numCell);
+            return option;
+        }
+
+        //Creates a new Bingo Cell, the real magic of this class
+        BingoOption createCell(int numCell, short difficulty)
+        {
+            BingoOption cell = new BingoOption();
+            switch (difficulty){
+                case (0):
+                {
+                    cell = makeEasyCell(numCell);
+                    break;
+                };
+                case (1):
+                {
+                    cell = makeNormalCell(numCell);
+                    break;
+                };
+                case (2):
+                {
+                    cell = makeHardCell(numCell);
+                    break;
+                };
+            }
+            return cell;
+        }
+
         private void parseBossData(string line)
         {
             string tempString = "";
@@ -248,7 +487,13 @@ namespace KhTracker
             foreach (string line in allLines) {
                 if (line.Contains("seed_name"))
                 {
-                    getValueFromLine(line, 1);
+                    int seedNum = 1;
+                    string seed = getValueFromLine(line, 1);
+                    foreach(char character in seed)
+                    {
+                        seedNum += character;
+                    }
+                    rand = new Random(seedNum);
                 }
                 else if (line.Contains("boss_enemy_data"))
                 {
@@ -373,7 +618,7 @@ namespace KhTracker
             return 0;
         }
 
-        //index, refers to the index of the cell, starting at top left, moving to the right, then wrapping around
+        //index, refers to the index of the cell, starting at top left, moving down, then wrapping around
         private void addButton(BingoOption bingoOption,int index)
         {
             int row = 0;
@@ -401,10 +646,16 @@ namespace KhTracker
                 }
                 else
                 {
-                    options[i] = new BingoOption();
-                    options[i].text = i.ToString();
-                    options[i].isHintable = false;
-                    options[i].isClicked = false;
+                    short tempDif = 0;
+                    if((difficulty == 0 && i <= 18) || 
+                        (difficulty == 1 && i <= 4) || 
+                        (difficulty == 2 && i < 0)) { tempDif = 0; }
+                    else if((difficulty == 0 && i <= 25) ||
+                        (difficulty == 1 && i <= 20) ||
+                        (difficulty == 2 && i <=10)) { tempDif = 1; }
+                    else { tempDif = 3; }
+
+                    options[i] = createCell(i,tempDif);
                     addButton(options[i], i);
                 }
             }
